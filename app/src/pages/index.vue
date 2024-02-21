@@ -6,8 +6,10 @@ const {
     playAudio,
     playAllSequentially,
     drawFrequencyData,
+    presignedUrl,
     canvas: canvasRef
 	} = useSequencer()
+
 
 async function createSample() {
   if (!text.value) return
@@ -21,6 +23,7 @@ async function createSample() {
 }
 
 onMounted(() => {
+presignedUrl()
 if (!canvasRef.value) {
   canvasRef.value = document.querySelector('canvas')
 }  
@@ -48,7 +51,6 @@ drawFrequencyData()
       <p class="row center gap-4">
       <button
         class="btn-icon bg-success text-accent col center"
-        :disabled="state.loading"
         @click="playAllSequentially"
       >
         <Icon icon="mdi-play-circle" class="x2" /> 
@@ -56,7 +58,6 @@ drawFrequencyData()
 
     <button
       class="btn-icon bg-warning col center"
-      :disabled="state.loading"
       @click="state.samples = []"
     >
       <Icon icon="mdi-delete" class="x2" />
@@ -72,7 +73,9 @@ drawFrequencyData()
           @click="playAudio(sample.audio,sample.sample_rate)"
         >
           <Icon icon="mdi-music" class=" x4"/>
-        </button>
+          <audio v-if="sample.url" :src="sample.url" controls></audio>      
+
+</button>
 </div>
     </section>
 

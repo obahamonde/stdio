@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://www.oscarbahamonde.com/api',
+        target: 'https://jvuxzejmh5lezc-80.proxy.runpod.net/api',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }

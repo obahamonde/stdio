@@ -116,6 +116,7 @@ class ObjectStorage(LazyProxy[Any]):
             content_type = file.content_type
         else:
             content_type = "application/octet-stream"
+        key = f"{key}/{file.filename}"
         data = await file.read()
         await self.put_object(
             key=key, data=data, content_type=content_type, bucket=bucket

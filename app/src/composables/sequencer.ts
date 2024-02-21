@@ -1,3 +1,4 @@
+import { Data } from './../../../.venv/lib/python3.10/site-packages/gradio/_frontend_code/dataframe/shared/utils';
 
 
 type AudioSample = {
@@ -5,6 +6,8 @@ type AudioSample = {
 	sample_rate: number;
 	duration: number;
 	time: number;
+	url?: string;
+	key?: string;
 }
 
 type AudioPrompt = {
@@ -28,7 +31,7 @@ export const useSequencer = () => {
 			state.loading += 1;
 		}, 1000);
 
-		const { data } = await useFetch("/api/music", {
+		const { data } = await useFetch("/api/music/default", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -61,14 +64,11 @@ export const useSequencer = () => {
 	}
 
 	const playAllSequentially = () => {
-		let accumulatedDelay = 0; // Accumulate delay based on each sample's duration
-
+		let accumulatedDelay = 0;
 		state.samples.forEach((sample, index) => {
 			setTimeout(() => {
 				playAudio(sample.audio, sample.sample_rate);
 			}, accumulatedDelay);
-
-			// Assuming 'duration' is in seconds, convert it to milliseconds and add to the accumulated delay
 			accumulatedDelay += sample.duration * 1000;
 		});
 	};
@@ -93,13 +93,28 @@ export const useSequencer = () => {
 		requestAnimationFrame(drawFrequencyData);
 	};
 
+	const presignedUrl = () => {
+		const { data } = useEventSource('/api/music/default');
+		watch(data, (newData) => {
+			if (newData) {
+				const json = JSON.parse(newData);
+				const url = json.url;
+				const key = json.key;
+				let obj = state.samples[state.samples.length - 1];
+				if (obj)
+					Object.assign(obj, { url, key });
+			}
+		}
+		);
+	}
 	return {
 		generateMusic,
 		state,
 		playAudio,
 		playAllSequentially,
 		drawFrequencyData,
-		canvas
+		canvas,
+		presignedUrl
 	}
 
 }

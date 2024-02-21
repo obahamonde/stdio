@@ -72,7 +72,6 @@ async def music_gen_event_source(key: str):
             "key": key,
         }
 
-
 @router.get("/music", response_class=EventSourceResponse)
 async def music_gen_get(key: str):
     return EventSourceResponse(music_gen_event_source(key))
