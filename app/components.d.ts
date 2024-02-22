@@ -7,11 +7,20 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    AppInput: typeof import('./src/components/AppInput.vue')['default']
+    AppLogo: typeof import('./src/components/AppLogo.vue')['default']
+    AppTitle: typeof import('./src/components/AppTitle.vue')['default']
+    ControllsTop: typeof import('./src/components/ControllsTop.vue')['default']
+    ControlsTop: typeof import('./src/components/ControlsTop.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Spinner: typeof import('./src/components/Spinner.vue')['default']
-    TheCounter: typeof import('./src/components/TheCounter.vue')['default']
-    TheFooter: typeof import('./src/components/TheFooter.vue')['default']
+    Spinner: (typeof import("./src/components/Spinner.vue"))["default"]
+    TextInput: typeof import('./src/components/TextInput.vue')['default']
+    TheCounter: (typeof import("./src/components/TheCounter.vue"))["default"]
+    TheFooter: (typeof import("./src/components/TheFooter.vue"))["default"]
     TheInput: typeof import('./src/components/TheInput.vue')['default']
+    TheTopButtons: typeof import('./src/components/TheTopButtons.vue')['default']
+    TopButtons: typeof import('./src/components/TopButtons.vue')['default']
   }
 }

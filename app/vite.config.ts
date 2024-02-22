@@ -1,28 +1,27 @@
-import path from 'node:path'
-import { defineConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import UnoCSS from 'unocss/vite'
-import VueMacros from 'unplugin-vue-macros/vite'
-import VueRouter from 'unplugin-vue-router/vite'
-import { VueRouterAutoImports } from 'unplugin-vue-router'
-
+import path from "node:path";
+import { defineConfig } from "vite";
+import Vue from "@vitejs/plugin-vue";
+import Components from "unplugin-vue-components/vite";
+import AutoImport from "unplugin-auto-import/vite";
+import UnoCSS from "unocss/vite";
+import VueMacros from "unplugin-vue-macros/vite";
+import VueRouter from "unplugin-vue-router/vite";
+import { VueRouterAutoImports } from "unplugin-vue-router";
 
 export default defineConfig({
   resolve: {
     alias: {
-      '~/': `${path.resolve(__dirname, 'src')}/`,
+      "~/": `${path.resolve(__dirname, "src")}/`,
     },
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'https://jvuxzejmh5lezc-80.proxy.runpod.net/api',
+      "/api": {
+        target: "https://jvuxzejmh5lezc-80.proxy.runpod.net/api",
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   plugins: [
     VueMacros({
@@ -44,18 +43,16 @@ export default defineConfig({
     // https://github.com/antfu/unplugin-auto-import
     AutoImport({
       imports: [
-        'vue',
-        '@vueuse/core',
+        "vue",
+        "@vueuse/core",
         VueRouterAutoImports,
         {
           // add any other imports you were relying on
-          'vue-router/auto': ['useLink'],
+          "vue-router/auto": ["useLink"],
         },
       ],
       dts: true,
-      dirs: [
-        './src/composables',
-      ],
+      dirs: ["./src/composables", "./src/firebase"],
       vueTemplate: true,
     }),
 
@@ -70,5 +67,4 @@ export default defineConfig({
   ],
 
   // https://github.com/vitest-dev/vitest
-
-})
+});

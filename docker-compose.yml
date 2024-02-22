@@ -19,7 +19,6 @@ services:
               count: "all"
               capabilities: [gpu]
 
-
 networks:
   app-network:
     driver: bridge

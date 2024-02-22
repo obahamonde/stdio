@@ -3,7 +3,6 @@ from typing import AsyncIterator, Dict, Generic, TypeVar
 
 import torch
 from fastapi import APIRouter
-from orjson import OPT_SERIALIZE_NUMPY, dumps  # pylint: disable=E0611
 from typing_extensions import NamedTuple
 
 T = TypeVar("T")

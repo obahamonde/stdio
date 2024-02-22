@@ -48,7 +48,6 @@ def loop() -> asyncio.AbstractEventLoop:
     return asyncio.get_running_loop()
 
 
-@torch.no_grad
 def splat(tensor: torch.Tensor | tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
     """
     Extracts the first tensor from a tuple if the input is a tuple, otherwise returns the input tensor.
@@ -64,7 +63,6 @@ def splat(tensor: torch.Tensor | tuple[torch.Tensor, torch.Tensor]) -> torch.Ten
     return tensor
 
 
-@torch.no_grad
 def detach(tensor: torch.Tensor) -> torch.Tensor:
     """
     Detaches a tensor from the computation graph and returns a new tensor.
@@ -79,7 +77,6 @@ def detach(tensor: torch.Tensor) -> torch.Tensor:
     return torch.tensor(tensor.detach().cpu().numpy())
 
 
-@torch.no_grad
 def flat(tensor: torch.Tensor) -> ndarray[np.float32, Any]:
     """
     Converts a tensor to a numpy array.
