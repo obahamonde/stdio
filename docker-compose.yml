@@ -1,24 +1,101 @@
-version: "3.8"
-
 services:
-  app:
-    build: .
+  
+  # db:
+  #   container_name: db
+  #   build: 
+  #     context: .
+  #     dockerfile: db.Dockerfile
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_DB: postgres
+  #     DATABASE_URL: postgres://postgres:postgres@db:5432/postgres?authSource=admin
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ~/.data:/var/lib/postgresql/data
+  #     #- ./db_hba.conf:/var/lib/postgresql/data/db_hba.conf
+
+  #   networks:
+  #     - main
+
+  # llama:
+  #   container_name: llama
+  #   image: vllm/vllm-openai:latest
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - HF_TOKEN=${HF_TOKEN}
+  #   command: --host 0.0.0.0 --model meta-llama/Meta-Llama-3-8B-Instruct --gpu-memory-utilization 0.95
+  #   env_file: 
+  #     - .env
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 0
+  #             capabilities: [gpu]
+  #   networks:
+  #     - main
+  #   restart: always
+  #   depends_on:
+  #     - db
+
+
+  bucket:
+    image: minio/minio:latest
+    container_name: bucket
     ports:
-      - "80:80"
-    volumes:
-      - .:/app
+      - "9000:9000"
+      - "9001:9001"
     env_file:
       - .env
+    volumes:
+      - ./static:/data
     networks:
-      - app-network
+      - main 
+    restart: always
+    command: server /data --console-address ":9001"
+
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/app 
+    # depends_on:
+    #   - db 
+      # - llama
+    env_file:
+      - .env
     deploy:
       resources:
         reservations:
           devices:
-            - driver: "nvidia"
-              count: "all"
+            - driver: nvidia
+              count: 1
               capabilities: [gpu]
+    networks:
+      - main
+
+  proxy:
+    container_name: proxy
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+      # - llama
+      # - db
+      - bucket
+    networks:
+      - main
 
 networks:
-  app-network:
+  main:
     driver: bridge

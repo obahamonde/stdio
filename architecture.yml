@@ -1,0 +1,73 @@
+component:
+  text_gen_task:
+
+    model: meta-llama/Meta-Llama-3-8B-Instruct
+    source: huggingface
+    manifest:
+      - name: runpod
+      - mode: serverless
+      - spec:
+        - workers: 1
+        - vRAM: 24GB
+        - endpoint: https://api.runpod.ai/v2/s7xl0nb3ryo2yk/openai/v1
+        - signature: openai
+
+  image_gen_task:
+    model: stabilityai/stable-diffusion-xl-base-1.0
+    source: huggingface
+    manifest: 
+      - name: runpod
+      - kind: serverless
+      - spec:
+        - workers: 1
+        - vRAM: 24GB
+        - endpoint: https://api.runpod.ai/v2/l6jgxv9b799f5z/runsync
+        - signature:
+              - request:
+                - method: POST
+                - headers:
+                    - Content-Type: application/json
+                    - Expect: application/json
+                - body: 
+                    '{"input": {"prompt":"Girl smiling to the camera in a red dress", "num_inference_steps": 25, "refiner_inference_steps": 50,"width": 1024,"height": 1024,"guidance_scale": 7.5,"strength": 0.3,"seed": null,"num_images": 1}}'
+              - response:
+                  - status_code: 200
+                  - body: 
+                      '{"delayTime": 1401,"executionTime": 12024,"id": "sync-7efc40b5-b640-4b78-a291-87cedf002d6f-u1","output": {"image_url": "[BASE_64_ENCODED_IMAGE]","images": ["[BASE_64_ENCODED_IMAGE]"],"seed": 15755},"status": "COMPLETED"}'
+                  - headers:
+                      - Content-Type: application/json
+
+
+  embeddings_task:
+    model: sentence-transformers/all-mpnet-base-v2
+    source: huggingface
+    manifest:
+      - name: databasemart
+      - mode: baremetal
+      - spec: baremetal
+      
+  speechtotext_task:
+    model: openai/whisper-large-v3
+    source: huggingface
+    
+  texttospeech_task:
+    model: coqui-ai/TTS
+    source: github
+
+  music_task:
+    model: facebook/musicgen-melody
+    source: huggingface
+
+  database_pod:
+    model: obahamondev/quipubase
+    source: dockerhub
+
+  storage_pod:
+    model: minio/minio
+    source: dockerhub
+
+  apigateway_pod:
+    model: obahamondev/quipukamayoc
+    source: dockerhub
+
+
